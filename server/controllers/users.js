@@ -1,4 +1,4 @@
-import User from "../models/User";
+import User from "../models/User.js";
 
 export const getUser = async (req, res) => {
     try {
@@ -45,7 +45,7 @@ export const addRemoveFriend = async (req, res) => {
         }
         await user.save();
         await friend.save();
-        
+
         const friends = await Promise.all(
             user.friends.map((id) => User.findById(id))
         );
