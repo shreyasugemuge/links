@@ -4,7 +4,7 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme, Link } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -18,10 +18,12 @@ const PostWidget = ({
   name,
   description,
   location,
-  picturePath,
   userPicturePath,
+  picturePath,
   likes,
   comments,
+  createdAt,
+  url
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -29,7 +31,6 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = likes && Boolean(likes[loggedInUserId]);
   const likeCount = likes ? Object.keys(likes).length : 0;
-
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -48,6 +49,9 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const date = new Date(createdAt);
+  const formattedTime = date.toLocaleString();
+
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -56,18 +60,39 @@ const PostWidget = ({
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
-      </Typography>
-      {picturePath && (
-        <img
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
-        />
-      )}
+      <Link href={url} underline="none" target="_blank" rel="noopener noreferrer">
+       <Box
+  sx={{
+    display: "flex",
+    gap: "1rem",
+    border: "1px solid grey", // border added here
+    borderRadius: "0.75rem",
+    padding: "1rem",
+    mt: "0.75rem",
+    '& img': {
+      width: "25%",
+      objectFit: "cover",
+      maxHeight: "150px",
+    },
+  }}
+>
+  <img
+    alt="post thumbnail"
+    src={`http://localhost:3001/assets/${picturePath}`}
+  />
+  <Box>
+    <Typography variant="subtitle1">
+      <a href={url}>{url}</a>
+    </Typography>
+    <Typography variant="body2" color="text.secondary">
+      GPT GENERATED SUMMARY OR DESCRIPTION TO GO HERE, source website provides some description, can be used and modified for paywall related articles
+    </Typography>
+  </Box>
+</Box>
+<Typography color={main} sx={{ mt: "1rem" }}>
+  {description}
+</Typography>
+      </Link>
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
@@ -89,9 +114,14 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
-          <ShareOutlined />
-        </IconButton>
+        <Box>
+          <Link underline="always" color="text.secondary" component="span">
+            {formattedTime}
+          </Link>
+          <IconButton>
+            <ShareOutlined />
+          </IconButton>
+        </Box>
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

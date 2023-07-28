@@ -30,6 +30,7 @@ const MyPostWidget = ({ picturePath }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
+  const [url, setUrl] = useState("");  // New state for URL
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -41,6 +42,7 @@ const MyPostWidget = ({ picturePath }) => {
     const formData = new FormData();
     formData.append("userId", _id);
     formData.append("description", post);
+    formData.append("url", url);
     if (image) {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
@@ -61,6 +63,20 @@ const MyPostWidget = ({ picturePath }) => {
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
+
+        <InputBase
+          placeholder="Enter URL..."
+          onChange={(e) => setUrl(e.target.value)}
+          value={url}
+          sx={{
+            width: "100%",
+            backgroundColor: palette.neutral.light,
+            borderRadius: "2rem",
+            padding: "1rem 2rem",
+            marginTop: "1rem"  // Adjust as needed
+          }}
+        />
+
         <InputBase
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}
@@ -72,6 +88,7 @@ const MyPostWidget = ({ picturePath }) => {
             padding: "1rem 2rem",
           }}
         />
+
       </FlexBetween>
       {isImage && (
         <Box
