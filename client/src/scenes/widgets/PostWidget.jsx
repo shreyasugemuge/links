@@ -27,11 +27,14 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
+  const date = new Date(createdAt);
+  const formattedTime = date.toLocaleString();
+  console.log(createdAt); // Log the raw value
+  console.log(typeof createdAt); // Log the type of the value
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = likes && Boolean(likes[loggedInUserId]);
   const likeCount = likes ? Object.keys(likes).length : 0;
-
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
@@ -49,8 +52,7 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
-  const date = new Date(createdAt);
-  const formattedTime = date.toLocaleString();
+  
 
   return (
     <WidgetWrapper m="2rem 0">
@@ -105,7 +107,7 @@ const PostWidget = ({
             </IconButton>
             <Typography>{likeCount}</Typography>
           </FlexBetween>
-
+ 
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
