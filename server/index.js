@@ -58,9 +58,9 @@ app.use("/posts", postRoutes);
 /* HTTPS */
 
 const credentials = {
-  key: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/fullchain.pem'),
-  ca: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/chain.pem')
+  key: readFileSync('/etc/letsencrypt/live/linksbynk.com/privkey.pem'),
+  cert: readFileSync('/etc/letsencrypt/live/linksbynk.com/fullchain.pem'),
+  ca: readFileSync('/etc/letsencrypt/live/linksbynk.com/chain.pem')
 };
 
 /* MONGOOSE SETUP */
