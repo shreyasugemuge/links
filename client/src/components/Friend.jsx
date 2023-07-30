@@ -23,7 +23,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost/users/${_id}/${friendId}`,
+      `http://linksbynk.com/users/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {

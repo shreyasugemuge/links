@@ -40,7 +40,7 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost/posts/${postId}/like`, {
+    const response = await fetch(`http://linksbynk.com/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ const PostWidget = ({
 >
   <img
     alt="post thumbnail"
-    src={`http://localhost/assets/${picturePath}`}
+    src={`http://linksbynk.com/assets/${picturePath}`}
   />
   <Box>
     <Typography variant="subtitle1">

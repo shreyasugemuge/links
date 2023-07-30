@@ -8,7 +8,7 @@ const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={`http://localhost/assets/${image}`}
+        src={`http://linksbynk.com/assets/${image}`}
       />
     </Box>
   );
