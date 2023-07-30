@@ -14,6 +14,8 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
+import https from 'https';
+import { readFileSync } from 'fs';
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
@@ -52,6 +54,15 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
+
+/* HTTPS */
+
+const credentials = {
+  key: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/fullchain.pem'),
+  ca: fs.readFileSync('/etc/letsencrypt/live/linksbynk.com/chain.pem')
+};
+
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
@@ -60,7 +71,8 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    const httpsServer = https.createServer(credentials, app);
+    httpsServer.listen(PORT, () => console.log(`https Server Port: ${PORT}`));
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);
