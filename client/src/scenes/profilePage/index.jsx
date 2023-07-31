@@ -8,12 +8,29 @@ import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 
+/**
+ * ProfilePage component displays the profile page of a user.
+ * It fetches user data from the server using the userId parameter and token.
+ * It renders the user's profile information, friend list, and posts.
+ *
+ * @returns {JSX.Element} The rendered profile page.
+ */
 const ProfilePage = () => {
+  // State variables
   const [user, setUser] = useState(null);
+
+  // Get userId from URL parameters
   const { userId } = useParams();
+
+  // Get token from Redux store
   const token = useSelector((state) => state.token);
+
+  // Check if the screen is non-mobile
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
+  /**
+   * Fetches user data from the server and sets the user state.
+   */
   const getUser = async () => {
     const response = await fetch(`https://linksbynk.com/users/${userId}`, {
       method: "GET",
@@ -23,12 +40,15 @@ const ProfilePage = () => {
     setUser(data);
   };
 
+  // Fetch user data on component mount
   useEffect(() => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // If user data is not available, return null
   if (!user) return null;
 
+  // Render the profile page
   return (
     <Box>
       <Navbar />

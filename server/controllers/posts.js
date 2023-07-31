@@ -1,10 +1,17 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
-/* CREATE */
+/**
+ * Creates a new post.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The created post.
+ * @throws {Object} - The error message if the post creation fails.
+ */
 export const createPost = async (req, res) => {
   try {
-    const { userId, url ,description, picturePath } = req.body;
+    const { userId, url, description, picturePath } = req.body;
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
@@ -26,7 +33,14 @@ export const createPost = async (req, res) => {
   }
 };
 
-/* READ */
+/**
+ * Retrieves all posts in the feed.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The retrieved posts.
+ * @throws {Object} - The error message if the retrieval fails.
+ */
 export const getFeedPosts = async (req, res) => {
   try {
     const post = await Post.find();
@@ -36,6 +50,14 @@ export const getFeedPosts = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves all posts by a specific user.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The retrieved posts.
+ * @throws {Object} - The error message if the retrieval fails.
+ */
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -46,7 +68,14 @@ export const getUserPosts = async (req, res) => {
   }
 };
 
-/* UPDATE */
+/**
+ * Likes or unlikes a post.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated post.
+ * @throws {Object} - The error message if the update fails.
+ */
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;

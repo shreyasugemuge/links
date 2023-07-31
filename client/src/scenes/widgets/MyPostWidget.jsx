@@ -1,5 +1,22 @@
-import { EditOutlined, DeleteOutlined, AttachFileOutlined, GifBoxOutlined, ImageOutlined, MicOutlined, MoreHorizOutlined } from "@mui/icons-material";
-import { Box, Divider, Typography, InputBase, useTheme, Button, IconButton, useMediaQuery } from "@mui/material";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  AttachFileOutlined,
+  GifBoxOutlined,
+  ImageOutlined,
+  MicOutlined,
+  MoreHorizOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  Divider,
+  Typography,
+  InputBase,
+  useTheme,
+  Button,
+  IconButton,
+  useMediaQuery,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
@@ -73,7 +90,6 @@ const MyPostWidget = ({ picturePath }) => {
             marginBottom: "1rem",
           }}
         />
-
       </FlexBetween>
       {isImage && (
         <Box

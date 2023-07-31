@@ -17,6 +17,16 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 import { YouTube } from "@mui/icons-material";
 
+/**
+ * Register schema for validating registration form inputs.
+ * - firstName: string, required
+ * - lastName: string, required
+ * - email: string, must be a valid email address, required
+ * - password: string, required
+ * - location: string, required
+ * - occupation: string, required
+ * - picture: string, required
+ */
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
@@ -27,11 +37,26 @@ const registerSchema = yup.object().shape({
   picture: yup.string().required("required"),
 });
 
+/**
+ * Login schema for validating login form inputs.
+ * - email: string, must be a valid email address, required
+ * - password: string, required
+ */
 const loginSchema = yup.object().shape({
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
 });
 
+/**
+ * Initial values for the registration form.
+ * - firstName: string, empty string
+ * - lastName: string, empty string
+ * - email: string, empty string
+ * - password: string, empty string
+ * - location: string, empty string
+ * - occupation: string, empty string
+ * - picture: string, empty string
+ */
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
@@ -42,28 +67,54 @@ const initialValuesRegister = {
   picture: "",
 };
 
+/**
+ * Initial values for the login form.
+ * - email: string, empty string
+ * - password: string, empty string
+ */
 const initialValuesLogin = {
   email: "",
   password: "",
 };
 
+/**
+ * Form component for user login and registration.
+ * Manages the page type, dispatch, navigation, and media queries.
+ * Provides functions for registering and logging in users.
+ * Handles form submission based on the current page type.
+ *
+ * @returns {JSX.Element} The Form component.
+ */
 const Form = () => {
+  // State variables
   const [pageType, setPageType] = useState("login");
+
+  // Custom hooks
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
+
+  // Check page type
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  /**
+   * Registers a new user.
+   *
+   * @param {Object} values - The form values.
+   * @param {Object} onSubmitProps - The form submission props.
+   * @returns {Promise<void>} A promise that resolves when the user is registered.
+   */
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
+    // Create form data
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
 
+    // Send form data to server
     const savedUserResponse = await fetch(
       "https://linksbynk.com/auth/register",
       {
@@ -74,12 +125,21 @@ const Form = () => {
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
+    // Update page type if user is saved
     if (savedUser) {
       setPageType("login");
     }
   };
 
+  /**
+   * Logs in a user.
+   *
+   * @param {Object} values - The form values.
+   * @param {Object} onSubmitProps - The form submission props.
+   * @returns {Promise<void>} A promise that resolves when the user is logged in.
+   */
   const login = async (values, onSubmitProps) => {
+    // Send login request to server
     const loggedInResponse = await fetch("https://linksbynk.com/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,6 +147,8 @@ const Form = () => {
     });
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
+
+    // Dispatch login action and navigate to home if user is logged in
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -98,11 +160,31 @@ const Form = () => {
     }
   };
 
+  /**
+   * Handles form submission based on the current page type.
+   *
+   * @param {Object} values - The form values.
+   * @param {Object} onSubmitProps - The form submission props.
+   * @returns {Promise<void>} A promise that resolves when the form is submitted.
+   */
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
 
+  /**
+   * Renders a form using the Formik library.
+   *
+   * Props:
+   * - handleFormSubmit: Function - The function to handle form submission.
+   * - isLogin: Boolean - Indicates whether the form is for login or registration.
+   * - initialValuesLogin: Object - Initial values for login form fields.
+   * - initialValuesRegister: Object - Initial values for registration form fields.
+   * - loginSchema: Object - Validation schema for login form fields.
+   * - registerSchema: Object - Validation schema for registration form fields.
+   *
+   * @returns {JSX.Element} The rendered form.
+   */
   return (
     <Formik
       onSubmit={handleFormSubmit}
@@ -130,6 +212,7 @@ const Form = () => {
           >
             {isRegister && (
               <>
+                {/* First Name */}
                 <TextField
                   label="First Name"
                   onBlur={handleBlur}
@@ -142,6 +225,8 @@ const Form = () => {
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
+
+                {/* Last Name */}
                 <TextField
                   label="Last Name"
                   onBlur={handleBlur}
@@ -152,6 +237,8 @@ const Form = () => {
                   helperText={touched.lastName && errors.lastName}
                   sx={{ gridColumn: "span 2" }}
                 />
+
+                {/* Location */}
                 <TextField
                   label="Location"
                   onBlur={handleBlur}
@@ -162,6 +249,8 @@ const Form = () => {
                   helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+                {/* Occupation */}
                 <TextField
                   label="Occupation"
                   onBlur={handleBlur}
@@ -174,6 +263,8 @@ const Form = () => {
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
+
+                {/* Picture */}
                 <Box
                   gridColumn="span 4"
                   border={`1px solid ${palette.neutral.medium}`}
@@ -210,6 +301,7 @@ const Form = () => {
               </>
             )}
 
+            {/* Email */}
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -220,6 +312,8 @@ const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
+
+            {/* Password */}
             <TextField
               label="Password"
               type="password"
@@ -272,5 +366,3 @@ const Form = () => {
     </Formik>
   );
 };
-
-export default Form;
