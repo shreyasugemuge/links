@@ -9,20 +9,26 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
 
   const getUserPosts = async () => {
+    if (!userId) return; // Exit if userId is not defined
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await fetch(
       `${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts/${userId}/posts`,
       {
         method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: headers,
       }
     );
     const data = await response.json();
@@ -30,7 +36,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   };
 
   useEffect(() => {
-    if (isProfile) {
+    if (isProfile && userId) {
       getUserPosts();
     } else {
       getPosts();

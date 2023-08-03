@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import HomePage from "scenes/homePage";
+import ViewPage from "scenes/viewPage";
 import LoginPage from "scenes/loginPage";
 import ProfilePage from "scenes/profilePage";
 import { useMemo } from "react";
@@ -38,6 +39,11 @@ function App() {
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
             />
+
+            {/* Render the ViewPage component regardless of authentication */}
+            <Route path="/view" 
+            element={<ViewPage />} />
+
 
             {/* Render the ProfilePage component if the user is authenticated, otherwise navigate to the root path */}
             <Route
