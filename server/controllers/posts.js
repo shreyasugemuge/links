@@ -1,5 +1,19 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import puppeteer from 'puppeteer';
+import multer from 'multer';
+
+// Multer Configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/assets');
+  },
+  filename: (req, file, cb) => {  
+    cb(null, new Date().getTime() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 /**
  * Creates a new post.
@@ -13,6 +27,27 @@ export const createPost = async (req, res) => {
   try {
     const { userId, url, description, picturePath } = req.body;
     const user = await User.findById(userId);
+
+    if (!picturePath) {
+      // Launch a new browser instance
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(url);
+      // Define a path to save the screenshot
+      thumbnailPath = `thumbnails/${new Date().getTime()}.png`;
+      // Take a screenshot
+      const screenshotBuffer = await page.screenshot();
+      // Close the browser
+      await browser.close();
+
+      // Use Multer to save the screenshot
+      const thumbnailFilename = new Date().getTime() + '-thumbnail.png';
+      const thumbnailPath = 'uploads/' + thumbnailFilename;
+      require('fs').writeFileSync(thumbnailPath, screenshotBuffer);
+
+      picturePath = thumbnailPath;
+    }
+
     const newPost = new Post({
       userId,
       firstName: user.firstName,
