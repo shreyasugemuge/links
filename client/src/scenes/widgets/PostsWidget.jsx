@@ -9,7 +9,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const response = await fetch("https://linksbynk.com/posts", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

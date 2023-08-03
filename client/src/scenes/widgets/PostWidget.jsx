@@ -90,7 +90,7 @@ const PostWidget = ({
         >
           <img
             alt="post thumbnail"
-            src={`https://linksbynk.com/assets/${picturePath}`}
+            src={`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/assets/${picturePath}`}
           />
           <Box>
             <Typography variant="subtitle1">
