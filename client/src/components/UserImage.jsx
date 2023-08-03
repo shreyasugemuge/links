@@ -15,7 +15,7 @@ const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={`https://linksbynk.com/assets/${image}`}
+        src={`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/assets/${image}`}
       />
     </Box>
   );

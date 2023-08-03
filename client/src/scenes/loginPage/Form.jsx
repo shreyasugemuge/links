@@ -116,7 +116,7 @@ const Form = () => {
 
     // Send form data to server
     const savedUserResponse = await fetch(
-      "https://linksbynk.com/auth/register",
+      `${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/auth/register`,
       {
         method: "POST",
         body: formData,
@@ -140,7 +140,7 @@ const Form = () => {
    */
   const login = async (values, onSubmitProps) => {
     // Send login request to server
-    const loggedInResponse = await fetch("https://linksbynk.com/auth/login", {
+    const loggedInResponse = await fetch(`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
