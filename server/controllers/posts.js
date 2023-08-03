@@ -1,19 +1,38 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
-import puppeteer from 'puppeteer';
-import multer from 'multer';
+import axios from 'axios';
+import thumbnail from 'node-thumbnail';
+import cheerio from 'cheerio';
+import download from 'download';
+import path from 'path';
 
-// Multer Configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/assets');
-  },
-  filename: (req, file, cb) => {  
-    cb(null, new Date().getTime() + '-' + file.originalname);
-  },
-});
 
-const upload = multer({ storage: storage });
+const createThumbnailFromUrl = async (url) => {
+  // Fetch the HTML from the URL
+  const { data } = await axios.get(url);
+
+  // Parse the HTML using Cheerio
+  const $ = cheerio.load(data);
+
+  // Get the Open Graph image URL
+  const ogImageUrl = $('meta[property="og:image"]').attr('content');
+
+  // Download the image to a temporary path
+  const tempImagePath = path.join('public/assets', path.basename(ogImageUrl));
+  await download(ogImageUrl, path.dirname(tempImagePath));
+
+  // Create a thumbnail using node-thumbnail
+  const thumbnailPath = path.join('public/assets', 'thumbnail-' + path.basename(ogImageUrl));
+  await thumbnail.thumbnail({
+    src: tempImagePath,
+    dest: 'public/assets',
+    width: 200, // Set the desired thumbnail width
+  });
+
+  return thumbnailPath;
+};
+
+
 
 /**
  * Creates a new post.
@@ -25,28 +44,10 @@ const upload = multer({ storage: storage });
  */
 export const createPost = async (req, res) => {
   try {
-    const { userId, url, description, picturePath } = req.body;
+    const { userId, url, description } = req.body;
     const user = await User.findById(userId);
 
-    if (!picturePath) {
-      // Launch a new browser instance
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto(url);
-      // Define a path to save the screenshot
-      thumbnailPath = `thumbnails/${new Date().getTime()}.png`;
-      // Take a screenshot
-      const screenshotBuffer = await page.screenshot();
-      // Close the browser
-      await browser.close();
-
-      // Use Multer to save the screenshot
-      const thumbnailFilename = new Date().getTime() + '-thumbnail.png';
-      const thumbnailPath = 'uploads/' + thumbnailFilename;
-      require('fs').writeFileSync(thumbnailPath, screenshotBuffer);
-
-      picturePath = thumbnailPath;
-    }
+    let picturePath = req.body.picturePath ? req.body.picturePath : await createThumbnailFromUrl(url);
 
     const newPost = new Post({
       userId,
