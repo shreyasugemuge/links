@@ -55,7 +55,10 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   // Full name of the user
-  const fullName = `${user.firstName} ${user.lastName}`;
+  const fullName = user ? `${user.firstName} ${user.lastName}` : '';
+
+  // Check if the user is logged in
+  const isLoggedIn = Boolean(user && user.firstName && user.lastName);
 
   // Rendered JSX
   return (
@@ -109,31 +112,24 @@ const Navbar = () => {
           <Notifications sx={{ fontSize: "25px" }} />
           {/* Help icon */}
           <Help sx={{ fontSize: "25px" }} />
-          {/* User profile dropdown */}
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
+          {/* User profile dropdown or Login button */}
+          {isLoggedIn ? (
+            <FormControl variant="standard" value={fullName}>
+              {/* ... existing dropdown ... */}
+            </FormControl>
+          ) : (
+            <Typography
+              onClick={() => navigate("/login")}
               sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
                 },
               }}
-              input={<InputBase />}
             >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
+              Login
+            </Typography>
+          )}
         </FlexBetween>
       ) : (
         // Mobile navigation (hamburger menu)
@@ -191,6 +187,7 @@ const Navbar = () => {
             {/* Help icon */}
             <Help sx={{ fontSize: "25px" }} />
             {/* User profile dropdown */}
+            {isLoggedIn ? (
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
@@ -217,7 +214,19 @@ const Navbar = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-          </FlexBetween>
+            ): (<Typography
+              onClick={() => navigate("/login")}
+              sx={{
+                "&:hover": {
+                  color: primaryLight,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              Login
+            </Typography>
+          )}
+           </FlexBetween> {/* This closing tag was missing */}
         </Box>
       )}
     </FlexBetween>
@@ -225,3 +234,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

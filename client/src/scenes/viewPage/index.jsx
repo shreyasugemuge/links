@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import Navbar from "scenes/navbar";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import PostsWidgetnl from "scenes/widgets/PostsWidgetnl";
+
 
 /**
  * The ViewPage component represents a page focused on displaying posts.
@@ -9,6 +10,7 @@ import PostsWidget from "scenes/widgets/PostsWidget";
  * @returns {JSX.Element} The rendered ViewPage component
  */
 const ViewPage = () => {
+
   return (
     <Box>
       {/* Sticky navigation bar */}
@@ -21,11 +23,11 @@ const ViewPage = () => {
         padding="2rem 6%"
         display="flex"
         flexDirection="column"
-        alignItems="center" // Centering content
-        justifyContent="center" // Centering content
+        alignItems="left" // Centering content
+        justifyContent="left" // Centering content
         >
         {/* Posts widget component */}
-        <PostsWidget />
+        <PostsWidgetnl />
       </Box>
     </Box>
   );

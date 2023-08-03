@@ -1,7 +1,6 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import axios from 'axios';
-import thumbnail from 'node-thumbnail';
 import cheerio from 'cheerio';
 import download from 'download';
 import path from 'path';
@@ -21,15 +20,8 @@ const createThumbnailFromUrl = async (url) => {
   const tempImagePath = path.join('public/assets', path.basename(ogImageUrl));
   await download(ogImageUrl, path.dirname(tempImagePath));
 
-  // Create a thumbnail using node-thumbnail
-  const thumbnailPath = path.join('public/assets', 'thumbnail-' + path.basename(ogImageUrl));
-  await thumbnail.thumbnail({
-    src: tempImagePath,
-    dest: 'public/assets',
-    width: 200, // Set the desired thumbnail width
-  });
-
-  return thumbnailPath;
+  // return path of downloaded image to store in mongo
+  return path.basename(tempImagePath);
 };
 
 
@@ -46,8 +38,10 @@ export const createPost = async (req, res) => {
   try {
     const { userId, url, description } = req.body;
     const user = await User.findById(userId);
+    console.log("user", user);
 
     let picturePath = req.body.picturePath ? req.body.picturePath : await createThumbnailFromUrl(url);
+    console.log("picturePath created", picturePath);
 
     const newPost = new Post({
       userId,

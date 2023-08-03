@@ -36,17 +36,20 @@ const PostWidget = ({
   const dispatch = useDispatch();
   const date = new Date(createdAt);
   const formattedTime = date.toLocaleString();
-  console.log(createdAt); // Log the raw value
-  console.log(typeof createdAt); // Log the type of the value
   const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state) => state.user._id);
-  const isLiked = likes && Boolean(likes[loggedInUserId]);
+  const loggedInUserId = useSelector((state) => state.user && state.user._id);
+  const isLiked = loggedInUserId && likes && Boolean(likes[loggedInUserId]);
   const likeCount = likes ? Object.keys(likes).length : 0;
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
   const patchLike = async () => {
+    if (!loggedInUserId) {
+      // Optionally, show a message that the user must be logged in to like a post
+      return;
+    }
+    
     const response = await fetch(`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
@@ -110,7 +113,7 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
+            <IconButton onClick={patchLike} disabled={!loggedInUserId}>
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
