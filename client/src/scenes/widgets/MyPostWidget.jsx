@@ -1,5 +1,22 @@
-import { EditOutlined, DeleteOutlined, AttachFileOutlined, GifBoxOutlined, ImageOutlined, MicOutlined, MoreHorizOutlined } from "@mui/icons-material";
-import { Box, Divider, Typography, InputBase, useTheme, Button, IconButton, useMediaQuery } from "@mui/material";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  AttachFileOutlined,
+  GifBoxOutlined,
+  ImageOutlined,
+  MicOutlined,
+  MoreHorizOutlined,
+} from "@mui/icons-material";
+import {
+  Box,
+  Divider,
+  Typography,
+  InputBase,
+  useTheme,
+  Button,
+  IconButton,
+  useMediaQuery,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
@@ -31,7 +48,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`https://linksbynk.com/posts`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "https://linksbynk.com"}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -73,7 +90,6 @@ const MyPostWidget = ({ picturePath }) => {
             marginBottom: "1rem",
           }}
         />
-
       </FlexBetween>
       {isImage && (
         <Box
