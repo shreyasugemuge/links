@@ -61,7 +61,7 @@ const HomePage = () => {
           flexBasis={isNonMobileScreens ? "74%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          {/* User's own posts */}
+          {/* create post */}
           <MyPostWidget picturePath={picturePath} />
           {/* Tabs for selecting post category */}
           <Tabs value={category} onChange={handleCategoryChange} centered>
