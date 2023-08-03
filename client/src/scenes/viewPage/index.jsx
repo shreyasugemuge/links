@@ -23,7 +23,7 @@ const ViewPage = () => {
         flexDirection="column"
         alignItems="center" // Centering content
         justifyContent="center" // Centering content
-      >
+        >
         {/* Posts widget component */}
         <PostsWidget />
       </Box>
